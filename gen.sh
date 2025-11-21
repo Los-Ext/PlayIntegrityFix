@@ -76,6 +76,9 @@ fi
 FILENAME=$(basename "$OTA_LINK")
 PRODUCT=$(echo "$FILENAME" | cut -d- -f1)
 DEVICE=${PRODUCT%_beta}
+RELEASE=$(echo "$FINGERPRINT"   | cut -d'/' -f3 | cut -d':' -f2)
+ID=$(echo "$FINGERPRINT" | cut -d'/' -f4 | cut -d':' -f2)
+INCREMENTAL=$(echo "$FINGERPRINT"   | cut -d'/' -f5 | cut -d':' -f1)
 echo "Parsed PRODUCT=$PRODUCT, DEVICE=$DEVICE"
 
 echo "Writing output to pif.json..."
@@ -84,10 +87,16 @@ cat <<EOF > "$SCRIPT_DIR/pif.json"
   "MANUFACTURER": "Google",
   "MODEL": "$MODEL",
   "FINGERPRINT": "$FINGERPRINT",
+  "BRAND": "google",
   "PRODUCT": "$PRODUCT",
   "DEVICE": "$DEVICE",
-  "SECURITY_PATCH": "$SECURITY_PATCH",
-  "DEVICE_INITIAL_SDK_INT": "32"
+  "VERSION.RELEASE": "16",
+  "ID": "$ID",
+  "VERSION.INCREMENTAL": "$INCREMENTAL",
+  "TYPE": "user",
+  "TAGS": "release-keys",
+  "VERSION.SECURITY_PATCH": "$SECURITY_PATCH",
+  "VERSION.DEVICE_INITIAL_SDK_INT": "32"
 }
 EOF
 
